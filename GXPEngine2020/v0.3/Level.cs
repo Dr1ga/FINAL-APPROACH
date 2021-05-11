@@ -14,13 +14,14 @@ public class Level : GameObject
     int _trapmsIndex;
     int _magasIndex;
     int _shelvesIndex;
-    
+    int _collidersIndex;
 
     public Sprite magwf;
     public Sprite trampwf;
     public Sprite shlfwf;
     public Sprite fon;
 
+    //public List<NLineSegment> _colliders;
     public List<NLineSegment> _lines;
     public List<Trampoline> _tramps;
     public List<Magnit> _magas;
@@ -31,6 +32,8 @@ public class Level : GameObject
 
     public float oldBallDistance;
     public float ballDistance;
+    public float ballDistanceToTramp;
+    public float ballDistanceToShelf;
 
     public bool magnetInConst;
     public bool trampInConst;
@@ -40,7 +43,7 @@ public class Level : GameObject
     public int level;
 
     public Vec2 ballStartPos;
-
+    public Level thatlevel;
     int _startSceneNumber = 1;
 
     LevelChanger levelC;
@@ -50,12 +53,12 @@ public class Level : GameObject
         fon = new Sprite("fon.png");
         AddChild(fon);
         level = numberOfLevel;
-
+        thatlevel = this;
         magwf = new Sprite("magnetWireframe.png");
         trampwf = new Sprite("trampolineWireframe.png");
-        shlfwf = new Sprite("shelfWireframe.png");
+        shlfwf = new Sprite("shelfBig.png");
         levelC = new LevelChanger("bucket.png");
-        _ball = new Ball(30, ballStartPos);
+        _ball = new Ball(30, ballStartPos, thatlevel);
         AddChild(shlfwf);
         AddChild(magwf);
         AddChild(trampwf);
@@ -69,12 +72,13 @@ public class Level : GameObject
         _tramps = new List<Trampoline>();
         _magas = new List<Magnit>();
         _shelves = new List<Shelf>();
+        //_colliders = new List<NLineSegment>();
         //_ball = new Ball(30, ballStartPos);
 
 
-        
 
-        
+
+
         _hud = new Constructor();
 
         
@@ -100,7 +104,7 @@ public class Level : GameObject
     void AddLine(Vec2 start, Vec2 end)
     {
 
-        NLineSegment lineAng = new NLineSegment(start, end, 0xff00ff00, 4);
+        Wall lineAng = new Wall(start, end);
         AddChild(lineAng);
         _lines.Add(lineAng);
 
@@ -128,27 +132,16 @@ public class Level : GameObject
     void AddShelf(Vec2 start, Vec2 end, float rotation)
     {
 
-        Shelf polka = new Shelf(start, end, rotation, "shelf.png");
+        Shelf polka = new Shelf(start, end, rotation, "shelfBig.png");
         AddChild(polka);
-        _shelves.Add(polka);
+        _lines.Add(polka);
 
     }
 
 
     void Update()
     {
-
-        _lineIndex++;
-        if (_lineIndex >= _lines.Count)
-        {
-            _lineIndex = 0;
-        }
-
-        _trapmsIndex++;
-        if (_trapmsIndex >= _tramps.Count)
-        {
-            _trapmsIndex = 0;
-        }
+       oldBallDistance = ballDistance;
 
         _magasIndex++;
         if (_magasIndex >= _magas.Count)
@@ -156,14 +149,54 @@ public class Level : GameObject
             _magasIndex = 0;
         }
 
-        _shelvesIndex++;
-        if (_shelvesIndex >= _shelves.Count)
+
+
+        Vec2 differenceVectorMagnete = _magas[_magasIndex].end - _ball.position;
+        Vec2 angledMagnete = _magas[_magasIndex].end - _magas[_magasIndex].start;
+        Vec2 magneteNormal = angledMagnete.Normal();
+
+        ballDistance = differenceVectorMagnete.Dot(magneteNormal.Normalized());
+
+        if (Mathf.Abs(ballDistance) <= _ball.radius + 18)
         {
-            _shelvesIndex = 0;
+            Vec2 middle = (_magas[_magasIndex].end + _magas[_magasIndex].start) * 0.5f;
+            Vec2 middletoBall = _ball.position - middle;
+
+            if (middletoBall.Length() < (angledMagnete.Length() / 2) + _ball.radius + 18)
+            {
+                if (middletoBall.Length() > 0)
+                {
+
+                    //if (_magas[_magasIndex].end.y > _magas[_magasIndex].start.y)
+                    //{
+
+                    //    _ball.acceleration.y = -1.7f;
+                    //}
+
+
+                    //if (_magas[_magasIndex].end.y < _magas[_magasIndex].start.y)
+                    //{
+
+                    //    _ball.acceleration.y = 1.7f;
+                    //}
+
+                    Vec2 distance = _magas[_magasIndex].start - _ball.position;
+                    _ball.velocity += distance.Normalized() *1.5f;
+
+                }
+            }
+
+        }
+        else
+        if (Mathf.Abs(ballDistance) >= _ball.radius)
+        {
+
+            _ball.acceleration.y = 1;
+
         }
 
 
-        oldBallDistance = ballDistance;
+
 
         if (Input.GetKeyDown(Key.ENTER))
         {
@@ -178,128 +211,7 @@ public class Level : GameObject
 
         }
 
-        Vec2 differenceVectorLines = _lines[_lineIndex].start - _ball.position;
-        Vec2 angledLine = _lines[_lineIndex].end - _lines[_lineIndex].start;
-        Vec2 ballNormal = _ball.position.Normal();
-        Vec2 lineNormal = angledLine.Normal();
-
-        ballDistance = differenceVectorLines.Dot(lineNormal.Normalized());   //HINT: it's NOT 10000
-
-        if (Mathf.Abs(ballDistance) <= _ball.radius)
-        {
-            Vec2 middle = (_lines[_lineIndex].start + _lines[_lineIndex].end) * 0.5f;
-            Vec2 middletoBall = _ball.position - middle;
-
-            if (middletoBall.Length() < (angledLine.Length() / 2) + _ball.radius)
-            {
-                if (middletoBall.Length() > 0)
-                {
-
-                    Vec2 POI = _ball.position + (ballDistance + _ball.radius) * angledLine.Normal();
-                    _ball.position = POI;
-                    _ball.velocity.Reflect(angledLine.Normal(), 1f);
-
-                }
-            }
-
-        }
-
-        
-        Vec2 differenceVectorShelves = _shelves[_shelvesIndex].start - _ball.position;
-        Vec2 angledShelfe = _shelves[_shelvesIndex].end - _shelves[_shelvesIndex].start;
-        Vec2 shelfNormal = angledLine.Normal();
-
-        ballDistance = differenceVectorShelves.Dot(shelfNormal.Normalized());   //HINT: it's NOT 10000
-
-        if (Mathf.Abs(ballDistance) <= _ball.radius)
-        {
-            Vec2 middle = (_shelves[_shelvesIndex].start + _shelves[_shelvesIndex].end) * 0.5f;
-            Vec2 middletoBall = _ball.position - middle;
-
-            if (middletoBall.Length() < (angledShelfe.Length() / 2) + _ball.radius)
-            {
-                if (middletoBall.Length() > 0)
-                {
-
-                    Vec2 POI = _ball.position + (ballDistance + _ball.radius) * angledShelfe.Normal();
-                    _ball.position = POI;
-                    _ball.velocity.Reflect(angledShelfe.Normal(), 1f);
-
-                }
-            }
-
-        }
-
-
-        Vec2 differenceVectorTramp = _tramps[_trapmsIndex].start - _ball.position;
-        Vec2 angledTramp = _tramps[_trapmsIndex].end - _tramps[_trapmsIndex].start;
-        Vec2 trampNormal = angledTramp.Normal();
-
-        ballDistance = differenceVectorTramp.Dot(trampNormal.Normalized());   //HINT: it's NOT 10000
-
-        if (Mathf.Abs(ballDistance) <= _ball.radius)
-        {
-            Vec2 middle = (_tramps[_trapmsIndex].start + _tramps[_trapmsIndex].end) * 0.5f;
-            Vec2 middletoBall = _ball.position - middle;
-
-            if (middletoBall.Length() < (angledTramp.Length() / 2) + _ball.radius)
-            {
-                if (middletoBall.Length() > 0)
-                {
-
-                    Vec2 POI = _ball.position + (ballDistance + _ball.radius) * angledTramp.Normal();
-                    _ball.position = POI;
-
-                    _ball.velocity.Bounce(angledTramp.Normal(), 2);
-
-                }
-            }
-
-        }
-
-
-
-
-
-
-
-        Vec2 differenceVectorMagnete = _magas[_magasIndex].end - _ball.position;
-        Vec2 angledMagnete = _magas[_magasIndex].end - _magas[_magasIndex].start;
-        Vec2 magneteNormal = angledMagnete.Normal();
-
-        ballDistance = differenceVectorMagnete.Dot(magneteNormal.Normalized());   //HINT: it's NOT 10000
-
-        if (Mathf.Abs(ballDistance) <= _ball.radius + 18)
-        {
-            Vec2 middle = (_magas[_magasIndex].end + _magas[_magasIndex].start) * 0.5f;
-            Vec2 middletoBall = _ball.position - middle;
-
-            if (middletoBall.Length() < (angledMagnete.Length() / 2) + _ball.radius + 18)
-            {
-                if (middletoBall.Length() > 0)
-                {
-
-                    //Vec2 POI = _ball.position + (ballDistance + _ball.radius) * angledTramp.Normal();
-                    //_ball.position = POI;
-
-                    //_ball.velocity.Bounce(angledTramp.Normal(), 1);
-
-                    _ball.acceleration.y = -1.7f;
-
-                }
-            }
-
-        }
-        else
-        if(Mathf.Abs(ballDistance) >= _ball.radius )
-        {
-
-            _ball.acceleration.y = 1;
-        
-        }
-
-
-
+   
 
         if (Input.GetMouseButtonDown(0) & _hud.magnetPNG.HitTestPoint(Input.mouseX, Input.mouseY) & trampInConst == false & shelfInConst == false)
         {
@@ -331,7 +243,7 @@ public class Level : GameObject
             
 
             shlfwf.SetOrigin(shlfwf.width, shlfwf.height / 2);
-            shlfwf.SetXY(_hud.bakingPosition.x + 115, _hud.bakingPosition.y);
+            shlfwf.SetXY(_hud.bakingPosition.x + shlfwf.width, _hud.bakingPosition.y);
             _hud.isConstWork = true;
             
             shlfwf.rotation = 0;
@@ -424,7 +336,7 @@ public class Level : GameObject
                 if (Input.GetKeyDown(Key.SPACE))
                 {
                     shlfwf.SetXY(-500, -500);
-                    AddShelf (new Vec2(_hud.bakingPosition.x + 115, _hud.bakingPosition.y), new Vec2(_hud.bakingPosition.x, _hud.bakingPosition.y), shlfwf.rotation);
+                    AddShelf (new Vec2(_hud.bakingPosition.x + shlfwf.width, _hud.bakingPosition.y), new Vec2(_hud.bakingPosition.x, _hud.bakingPosition.y), shlfwf.rotation);
 
 
                     _hud.isConstWork = false;
@@ -481,6 +393,8 @@ public class Level : GameObject
         //_text.Text("Distance to line: "+(ballDistance - _ball.radius), 0, 0);
         _text.Text("point X: " + (Input.mouseX), 0, 0);
         _text.Text("point Y: " + (Input.mouseY), 130, 0);
+
+        
     }
 
 
@@ -523,22 +437,30 @@ public class Level : GameObject
         AddTrampoline(new Vec2(213131, 12312312), new Vec2(12313123, 123131), 0);
         AddMagnete(new Vec2(12312, 123132), new Vec2(123123, 123123), 0);
         AddShelf(new Vec2(12312, 123132), new Vec2(123123, 123123), 0);
+        levelC.LateDestroy();
         _ball.LateDestroy();
         switch (sceneNumber)
         {
            
             case 1: // level one
                 AddLine(new Vec2(1347, 636), new Vec2(1006, 705));
+                levelC = new LevelChanger("bucket.png");
                 levelC.SetXY(600, 920);
                 ballStartPos = new Vec2(1600, 240);
-                _ball = new Ball(30, ballStartPos);
+                _ball = new Ball(30, ballStartPos, thatlevel);
+                AddChild(levelC);
                 AddChild(_ball);
                 break;
             case 2: // level two
-                AddLine(new Vec2(1347, 636), new Vec2(1006, 705));
-                levelC.SetXY(600, 920);
+
+
+                AddLine(new Vec2(445, 437), new Vec2(295, 363));
+                AddLine(new Vec2(583, 583), new Vec2(429, 497));
+                levelC = new LevelChanger("bucket.png");
+                levelC.SetXY(1600, 920);
                 ballStartPos = new Vec2(370, 240);
-                _ball = new Ball(30, ballStartPos);
+                _ball = new Ball(30, ballStartPos, thatlevel);
+                AddChild(levelC);
                 AddChild(_ball);
                 break;
             default: // 
@@ -548,35 +470,7 @@ public class Level : GameObject
       
     }
 
+    
 
-
-    //CollisionInfo FindEarliestCollision()
-    //{
-    //    MyGame myGame = (MyGame)game;
-    //    CollisionInfo firstColl = new CollisionInfo(new Vec2(), null, 2);
-    //    // line segmet			
-    //    for (int i = 0; i < _lines.Count; i++)
-    //    {
-    //        Ball mover = myGame.GetMover(i);
-    //        if (mover != this)
-    //        {
-    //            Vec2 relativePosition = position - mover.position;
-    //            if (relativePosition.Length() < radius + mover.radius)
-    //            {
-    //                // TODO: compute correct normal and time of impact, and 
-    //                // 		 return *earliest* collision instead of *first detected collision*:
-    //                Vec2 distanceBetweenMovers = mover.position - position;
-    //                Vec2 normalOfCollision = distanceBetweenMovers.Normal();
-    //                //_collisionIndicator = new Arrow(mover.position, position, 10);
-    //                //AddChild(_collisionIndicator);
-
-
-    //                return new CollisionInfo(new Vec2(1, 0), mover, 0);
-    //            }
-    //        }
-    //    }
-    //    // TODO: Check Line segments using myGame.GetLine();
-    //    return null;
-    //}
 
 }
