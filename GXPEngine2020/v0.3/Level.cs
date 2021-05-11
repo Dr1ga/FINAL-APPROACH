@@ -229,8 +229,8 @@ public class Level : GameObject
         if (Input.GetMouseButtonDown(0) & _hud.trampolinePNG.HitTestPoint(Input.mouseX, Input.mouseY) & magnetInConst == false & shelfInConst == false)
         {
             
-            trampwf.SetOrigin(trampwf.width, trampwf.height/2);
-            trampwf.SetXY(_hud.bakingPosition.x + 128, _hud.bakingPosition.y );
+            trampwf.SetOrigin(trampwf.width, 0);
+            trampwf.SetXY(_hud.bakingPosition.x + 64, _hud.bakingPosition.y );
             _hud.isConstWork = true;
             trampwf.rotation = 0;
             trampInConst = true;
@@ -242,8 +242,9 @@ public class Level : GameObject
 
             
 
-            shlfwf.SetOrigin(shlfwf.width, shlfwf.height / 2);
-            shlfwf.SetXY(_hud.bakingPosition.x + shlfwf.width, _hud.bakingPosition.y);
+            shlfwf.SetOrigin(shlfwf.width, 0);
+            shlfwf.alpha = 0.4f;
+            shlfwf.SetXY(_hud.bakingPosition.x + shlfwf.width/2, _hud.bakingPosition.y);
             _hud.isConstWork = true;
             
             shlfwf.rotation = 0;
@@ -305,7 +306,7 @@ public class Level : GameObject
                 {
 
                     trampwf.SetXY(-500, -500);
-                    AddTrampoline(new Vec2(_hud.bakingPosition.x, _hud.bakingPosition.y), new Vec2(_hud.bakingPosition.x + 128, _hud.bakingPosition.y), trampwf.rotation);
+                    AddTrampoline(new Vec2(_hud.bakingPosition.x - 64, _hud.bakingPosition.y), new Vec2(_hud.bakingPosition.x + 64, _hud.bakingPosition.y), trampwf.rotation);
 
 
                     _hud.isConstWork = false;
@@ -336,7 +337,7 @@ public class Level : GameObject
                 if (Input.GetKeyDown(Key.SPACE))
                 {
                     shlfwf.SetXY(-500, -500);
-                    AddShelf (new Vec2(_hud.bakingPosition.x + shlfwf.width, _hud.bakingPosition.y), new Vec2(_hud.bakingPosition.x, _hud.bakingPosition.y), shlfwf.rotation);
+                    AddShelf (new Vec2(_hud.bakingPosition.x + shlfwf.width/2, _hud.bakingPosition.y), new Vec2(_hud.bakingPosition.x - shlfwf.width / 2, _hud.bakingPosition.y), shlfwf.rotation);
 
 
                     _hud.isConstWork = false;

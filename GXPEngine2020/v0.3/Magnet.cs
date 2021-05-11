@@ -34,7 +34,7 @@ public class Magnit : NLineSegment
 
 		magnet.rotation = magnetRotation;
 
-		Console.WriteLine(magnet.rotation);
+		//Console.WriteLine(magnet.rotation);
 		
 	}
 

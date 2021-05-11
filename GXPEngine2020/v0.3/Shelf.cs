@@ -25,7 +25,7 @@ public class Shelf : NLineSegment
 
 
 		AddChild(shelf);
-		shelf.SetOrigin(shelf.width / 2, shelf.height / 2);
+		shelf.SetOrigin(shelf.width / 2, 0);
 		shelf.rotation = shelfRotation;
 		shelf.SetXY(_middle.x, _middle.y);
 
@@ -35,7 +35,7 @@ public class Shelf : NLineSegment
 	void Update()
 	{
 
-		Console.WriteLine(shelf.rotation);
+		//Console.WriteLine(shelf.rotation);
 
 	}
 }

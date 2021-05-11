@@ -8,7 +8,9 @@ public class Constructor : GameObject
     public Sprite magnetPNG;
     public Sprite trampolinePNG;
     public Sprite shelfPNG;
-    public Sprite point;
+    //public Sprite point;
+
+    public Cursor point;
 
     public bool isConstOpen = false;
     public bool isConstWork = false;
@@ -17,8 +19,8 @@ public class Constructor : GameObject
 
     public Constructor()
     {
-        point = new Sprite("ball.png");
-        
+        //point = new Sprite("ball.png");
+        point = new Cursor(0, 0, "cursor.png");
         magnetPNG = new Sprite("magnetPNG.png");
         trampolinePNG = new Sprite("trampoline.png");
         shelfPNG = new Sprite("shelf.png");

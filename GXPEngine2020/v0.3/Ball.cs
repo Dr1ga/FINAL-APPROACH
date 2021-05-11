@@ -10,7 +10,8 @@ public class Ball : EasyDraw
 	}
 
 	public Vec2 velocity;
-	public Vec2 position;
+    public Vec2 oldVelocity;
+    public Vec2 position;
 	public Vec2 oldPosition;
 	public Vec2 acceleration;
     Level _levelinfo;
@@ -53,9 +54,11 @@ public class Ball : EasyDraw
 
 	public void Step () {
 		oldPosition = position;
+        oldVelocity = velocity;
         if (grounded)
             grounded = false;
         else
+            
             velocity += acceleration;
         position += velocity;
         CollisionInfo firstCollision = FindEarliestCollision();
@@ -100,7 +103,7 @@ public class Ball : EasyDraw
 
     void ResolveCollision(CollisionInfo info)
     {
-
+        
         //reset to PoI
 
         if (info.other is Trampoline)
@@ -118,6 +121,22 @@ public class Ball : EasyDraw
         {
             Vec2 POI = position + (info.ballDistance + radius) * info.normal;
             position = POI;
+            if (info.normal.x > 0)
+            {
+                velocity.x += 0.1f;
+            }
+            if (info.normal.x < 0)
+            {
+                velocity.x -= 0.1f;
+            }
+            if (info.normal.x == 0 & velocity.x > 0) 
+            {
+                    velocity.x -= 0.1f;
+            }else
+            if (info.normal.x == 0 & velocity.x < 0)
+            {
+                velocity.x += 0.1f;
+            }
             velocity.Reflect(info.normal, 0.6f);
         }
 
@@ -125,7 +144,24 @@ public class Ball : EasyDraw
         {
             Vec2 POI = position + (info.ballDistance + radius) * info.normal;
             position = POI;
-            velocity.Reflect(info.normal, 0.6f);
+            if (info.normal.x > 0)
+            {
+                velocity.x += 0.1f;
+            }
+            if (info.normal.x < 0)
+            {
+                velocity.x -= 0.1f;
+            }
+            if (info.normal.x == 0 & velocity.x > 0)
+            {
+                velocity.x -= 0.1f;
+            }
+            else
+            if (info.normal.x == 0 & velocity.x < 0)
+            {
+                velocity.x += 0.1f;
+            }
+            velocity.Reflect(info.normal, 0.6f);     
         }
 
         grounded = true;

@@ -25,7 +25,7 @@ public class Trampoline : NLineSegment
 		
 
 		AddChild(trapmliiin);
-		trapmliiin.SetOrigin(trapmliiin.width / 2, trapmliiin.height / 2);
+		trapmliiin.SetOrigin(trapmliiin.width / 2, 0);
 		trapmliiin.rotation = trampRotation;
 		trapmliiin.SetXY(_middle.x, _middle.y);
 		
@@ -35,7 +35,7 @@ public class Trampoline : NLineSegment
 	void Update() 
 	{
 
-		Console.WriteLine(trapmliiin.rotation);
+		//Console.WriteLine(trapmliiin.rotation);
 
 	}
 }
