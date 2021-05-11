@@ -46,6 +46,7 @@
     <Compile Include="Level.cs" />
     <Compile Include="LevelChanger.cs" />
     <Compile Include="Magnet.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Shelf.cs" />
     <Compile Include="TextBoard.cs" />

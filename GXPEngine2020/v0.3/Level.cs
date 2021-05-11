@@ -390,10 +390,10 @@ public class Level : GameObject
             }
         }
 
-        _text.Clear(Color.Transparent);
+        //_text.Clear(Color.Transparent);
         //_text.Text("Distance to line: "+(ballDistance - _ball.radius), 0, 0);
-        _text.Text("point X: " + (Input.mouseX), 0, 0);
-        _text.Text("point Y: " + (Input.mouseY), 130, 0);
+        //_text.Text("point X: " + (Input.mouseX), 0, 0);
+        //_text.Text("point Y: " + (Input.mouseY), 130, 0);
 
         
     }

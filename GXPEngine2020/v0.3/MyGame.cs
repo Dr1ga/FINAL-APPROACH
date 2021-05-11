@@ -15,7 +15,8 @@ public class MyGame : Game
 	
 	public MyGame () : base(1920, 1080, false,false)
 	{
-		StartLevel();
+		SetupMenu();
+		//StartLevel();
 	}
 
 	void StartLevel() 
@@ -24,6 +25,11 @@ public class MyGame : Game
 		AddChild(level);
 	}
 
-	
+	void SetupMenu()
+	{
+		Menu menu = new Menu(1);
+		AddChild(menu);
+	}
+
 }
 
