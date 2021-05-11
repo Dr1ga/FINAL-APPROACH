@@ -9,7 +9,7 @@ public class Shelf : NLineSegment
 	public Sprite shelf;
 	Vec2 _collisionZone;
 	Vec2 _middle;
-	public Shelf(Vec2 nostart, Vec2 noend, float shelfRotation, string filename) : base(nostart, noend, 0xff00ff00, 3)
+	public Shelf(Vec2 nostart, Vec2 noend, float shelfRotation, string filename) : base(nostart, noend)
 	{
 
 

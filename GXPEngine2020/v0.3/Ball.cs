@@ -33,7 +33,7 @@ public class Ball : EasyDraw
 		UpdateScreenPosition ();
 		SetOrigin (_radius, _radius);
 		velocity.SetXY(0, 0);
-		Draw (255, 255, 255);
+		//Draw (255, 255, 255);
 		oldPosition = new Vec2(0, 0);
 
         AddChild(_skin);
@@ -111,7 +111,7 @@ public class Ball : EasyDraw
 
             Vec2 POI = position + (info.ballDistance + radius) * info.normal;
             position = POI;
-            velocity.Bounce(info.normal, 2f);
+            velocity.Bounce(info.normal, 3f);
 
         }
         //position += velocity * info.timeOfImpact;
@@ -123,19 +123,19 @@ public class Ball : EasyDraw
             position = POI;
             if (info.normal.x > 0)
             {
-                velocity.x += 0.1f;
+                velocity.x += 0.2f;
             }
             if (info.normal.x < 0)
             {
-                velocity.x -= 0.1f;
+                velocity.x -= 0.2f;
             }
             if (info.normal.x == 0 & velocity.x > 0) 
             {
-                    velocity.x -= 0.1f;
+                    velocity.x -= 0.2f;
             }else
             if (info.normal.x == 0 & velocity.x < 0)
             {
-                velocity.x += 0.1f;
+                velocity.x += 0.2f;
             }
             velocity.Reflect(info.normal, 0.6f);
         }
@@ -146,20 +146,20 @@ public class Ball : EasyDraw
             position = POI;
             if (info.normal.x > 0)
             {
-                velocity.x += 0.1f;
+                velocity.x += 0.2f;
             }
             if (info.normal.x < 0)
             {
-                velocity.x -= 0.1f;
+                velocity.x -= 0.2f;
             }
             if (info.normal.x == 0 & velocity.x > 0)
             {
-                velocity.x -= 0.1f;
+                velocity.x -= 0.2f;
             }
             else
             if (info.normal.x == 0 & velocity.x < 0)
             {
-                velocity.x += 0.1f;
+                velocity.x += 0.2f;
             }
             velocity.Reflect(info.normal, 0.6f);     
         }

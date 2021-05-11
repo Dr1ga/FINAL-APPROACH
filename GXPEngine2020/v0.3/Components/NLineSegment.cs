@@ -20,7 +20,7 @@ namespace GXPEngine
 			: base (pStart, pEnd, pColor, pLineWidth)
 		{
 			_normal = new Arrow (new Vec2(0,0), new Vec2(0,0), 40, 0xffff0000, 1);
-			AddChild (_normal);
+			//AddChild (_normal);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------

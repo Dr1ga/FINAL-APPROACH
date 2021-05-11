@@ -6,6 +6,8 @@ public class Menu : GameObject
 {
     private Sound _clickSound;
 
+    private Sprite _cursorIMG;
+
     private Sprite _startButton;
     private Sprite _startButtonActive;
 
@@ -31,19 +33,20 @@ public class Menu : GameObject
     private Sound backgroundMusic;
     private SoundChannel soundChannel;
 
-    public float soundVolume = 0.1f;
+    public float soundVolume;
     private TextBoard _sVolume;
-    public Menu(int numberOfLevel) : base()
+    public Menu(int numberOfLevel , float pSoundVolume) : base()
     {
-
+        soundVolume = pSoundVolume;
+        _cursorIMG = new Sprite("HUD/cursor_PNG50.png");
 
         backgroundMusic = new Sound("music_for_menu.mp3", true, true);
         
         soundChannel = backgroundMusic.Play();
         _numberOfLevel = numberOfLevel;
 
-        //enter filenames of menu buttons. try use buttons not much bigger than in sample.
-        //_clickSoundFilename = "ping.wav";
+
+        _clickSound = new Sound("1.mp3");
 
         _fon = new Sprite("fon.png");
 
@@ -114,7 +117,7 @@ public class Menu : GameObject
         AddChild(_plusButton);
         AddChild(_plusButtonActive);
         //_clickSound = new Sound(_clickSoundFilename);
-
+        AddChild(_cursorIMG);
     }
 
     public void Update()
@@ -212,7 +215,7 @@ public class Menu : GameObject
             if (_startButton.HitTestPoint(Input.mouseX, Input.mouseY))
             {
                 StartGame();
-                //clickSound.Play();
+                _clickSound.Play();
             }
             if (_optionsButton.HitTestPoint(Input.mouseX, Input.mouseY))
             {
@@ -224,11 +227,12 @@ public class Menu : GameObject
                 _minusButton.x -= 10000;
                 _plusButton.x -= 10000;
                 _sVolume.x = game.width / 2f - 110;
+                _clickSound.Play();
             }
             if (_exitButton.HitTestPoint(Input.mouseX, Input.mouseY))
             {
                 game.Destroy();
-                //clickSound.Play();
+                _clickSound.Play();
             }
             if (_goBackButton.HitTestPoint(Input.mouseX, Input.mouseY))
             {
@@ -240,7 +244,7 @@ public class Menu : GameObject
                 _exitButton.x -= 10000;
                 _optionsButton.x -= 10000;
                 _sVolume.x = 10000;
-                //clickSound.Play();
+                _clickSound.Play();
             }
 
             if (_minusButton.HitTestPoint(Input.mouseX, Input.mouseY) & soundVolume >= 0.01)
@@ -248,21 +252,24 @@ public class Menu : GameObject
 
                 soundVolume -= 0.01f;
 
-                //clickSound.Play();
+                _clickSound.Play();
             }
             if (_plusButton.HitTestPoint(Input.mouseX, Input.mouseY) & soundVolume <= 0.99)
             {
 
                 soundVolume += 0.01f;
 
-                //clickSound.Play();
+                _clickSound.Play();
             }
 
         }
 
 
         _sVolume.SetText(""+ Math.Round(soundVolume * 100), 100);
-
+        if (Input.mouseX >= 0 & Input.mouseX <= game.width & Input.mouseY >= 0 & Input.mouseY <= game.height)
+        {
+            _cursorIMG.SetXY(Input.mouseX, Input.mouseY);
+        }
     }
 
 
@@ -273,7 +280,8 @@ public class Menu : GameObject
     //--------------------------------------------------------------------
     private void StartGame()
     {
-        Level level = new Level(1);
+        Level level = new Level(1, soundVolume);
+        soundChannel.Stop();
         game.AddChild(level);
         LateDestroy();
     }

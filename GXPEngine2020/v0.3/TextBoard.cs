@@ -31,7 +31,7 @@ public class TextBoard : GameObject
         
         _easyDraw.TextSize(fontsize);
         _easyDraw.Text(text, _easyDraw.width / 2, _easyDraw.height / 2);
-
+        _easyDraw.Fill(0, 0, 0);
 
     }
 

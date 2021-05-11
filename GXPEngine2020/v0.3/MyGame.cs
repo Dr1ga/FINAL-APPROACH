@@ -13,7 +13,7 @@ public class MyGame : Game
 	
 
 	
-	public MyGame () : base(1920, 1080, false,false)
+	public MyGame () : base(1920, 1080, true, false)
 	{
 		SetupMenu();
 		//StartLevel();
@@ -21,13 +21,13 @@ public class MyGame : Game
 
 	void StartLevel() 
 	{
-		Level level = new Level(1);
+		Level level = new Level(1, 0.1f);
 		AddChild(level);
 	}
 
 	void SetupMenu()
 	{
-		Menu menu = new Menu(1);
+		Menu menu = new Menu(1, 0.1f);
 		AddChild(menu);
 	}
 

@@ -178,7 +178,7 @@ public class Gizmos {
 		if (pGlobalCoords) GL.LoadIdentity();
 		GL.Disable(GL.TEXTURE_2D);
 		GL.LineWidth(pLineWidth);
-		GL.Color4ub((byte)((pColor >> 16) & 0xff), (byte)((pColor >> 8) & 0xff), (byte)((pColor) & 0xff), (byte)((pColor >> 24) & 0xff));
+		//GL.Color4ub((byte)((pColor >> 16) & 0xff), (byte)((pColor >> 8) & 0xff), (byte)((pColor) & 0xff), (byte)((pColor >> 24) & 0xff));
 		float[] vertices = new float[] { x1, y1, x2, y2 };
 		GL.EnableClientState(GL.VERTEX_ARRAY);
 		GL.VertexPointer(2, GL.FLOAT, 0, vertices);

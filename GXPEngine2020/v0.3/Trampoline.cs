@@ -9,7 +9,7 @@ public class Trampoline : NLineSegment
 	public Sprite trapmliiin;
 	Vec2 _collisionZone;
 	Vec2 _middle;
-	public Trampoline(Vec2 nostart, Vec2 noend, float trampRotation, string filename) : base(nostart, noend, 0xff00ff00, 3)
+	public Trampoline(Vec2 nostart, Vec2 noend, float trampRotation, string filename) : base(nostart, noend)
 	{
 
 

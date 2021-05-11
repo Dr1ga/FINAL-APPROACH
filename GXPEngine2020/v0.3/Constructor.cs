@@ -4,10 +4,11 @@ using System.IO;
 
 public class Constructor : GameObject
 {
-    
+    private Sound _clickSound;
     public Sprite magnetPNG;
     public Sprite trampolinePNG;
     public Sprite shelfPNG;
+    public Sprite itemBoard;
     //public Sprite point;
 
     public Cursor point;
@@ -24,16 +25,21 @@ public class Constructor : GameObject
         magnetPNG = new Sprite("magnetPNG.png");
         trampolinePNG = new Sprite("trampoline.png");
         shelfPNG = new Sprite("shelf.png");
+        itemBoard = new Sprite("HUD/top_items.png");
 
+        AddChild(itemBoard);
         AddChild(magnetPNG);
         AddChild(trampolinePNG);
         AddChild(shelfPNG);
         AddChild(point);
 
         bakingPosition.SetXY(50021, 100 + 10000);
-        magnetPNG.SetXY(500, 100 + 10000);
-        trampolinePNG.SetXY(800, 100 + 10000);
-        shelfPNG.SetXY(1100, 100 + 10000);
+        magnetPNG.SetXY(game.width / 2 - itemBoard.width / 2 + 100, 20 + 10000);
+        trampolinePNG.SetXY(game.width / 2 - trampolinePNG.width/2, 30 + 10000);
+        shelfPNG.SetXY(game.width / 2 - itemBoard.width / 2 + 500, 35 + 10000);
+        itemBoard.SetXY(game.width/2 - itemBoard.width/2, 10000);
+
+        _clickSound = new Sound("1.mp3");
 
     }
 
@@ -46,7 +52,7 @@ public class Constructor : GameObject
             BakeCursor();
             OpenConstructor();
             isConstOpen = true;
-
+            _clickSound.Play();
         }
         else
 
@@ -55,7 +61,7 @@ public class Constructor : GameObject
 
             CloseConstructor();
             isConstOpen = false;
-
+            _clickSound.Play();
         }
 
 
@@ -108,7 +114,7 @@ public class Constructor : GameObject
         magnetPNG.y -= 10000;
         trampolinePNG.y -= 10000;
         shelfPNG.y -= 10000;
-
+        itemBoard.y -= 10000;
     }
 
     public void CloseConstructor()
@@ -117,6 +123,7 @@ public class Constructor : GameObject
         magnetPNG.y += 10000;
         trampolinePNG.y += 10000;
         shelfPNG.y += 10000;
+        itemBoard.y += 10000;
 
     }
 

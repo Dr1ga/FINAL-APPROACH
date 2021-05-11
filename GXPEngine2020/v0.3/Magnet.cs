@@ -12,7 +12,7 @@ public class Magnit : NLineSegment
 	Vec2 _realEnd;
 	Vec2 _realStart;
 
-	public Magnit(Vec2 noStart, Vec2 noEnd, float magnetRotation, string filename) : base(noStart, noEnd, 0xff00ff00, 3)
+	public Magnit(Vec2 noStart, Vec2 noEnd, float magnetRotation, string filename) : base(noStart, noEnd)
 	{
 		
 		end.RotateAroundDegrees(magnetRotation, noStart);
