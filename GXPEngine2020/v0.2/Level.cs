@@ -14,6 +14,7 @@ public class Level : GameObject
     int _trapmsIndex;
     int _magasIndex;
     int _shelvesIndex;
+    
 
     public Sprite magwf;
     public Sprite trampwf;
@@ -40,6 +41,8 @@ public class Level : GameObject
 
     public Vec2 ballStartPos;
 
+    int _startSceneNumber = 1;
+
     LevelChanger levelC;
     public Level(int numberOfLevel) : base()
     {
@@ -51,35 +54,30 @@ public class Level : GameObject
         magwf = new Sprite("magnetWireframe.png");
         trampwf = new Sprite("trampolineWireframe.png");
         shlfwf = new Sprite("shelfWireframe.png");
-
+        levelC = new LevelChanger("bucket.png");
+        _ball = new Ball(30, ballStartPos);
         AddChild(shlfwf);
         AddChild(magwf);
         AddChild(trampwf);
+        AddChild(levelC);
+
         magwf.SetXY(-500, -500);
         trampwf.SetXY(-500, -500);
         shlfwf.SetXY(-500, -500);
+        levelC.SetXY(-500, -500);
         _lines = new List<NLineSegment>();
         _tramps = new List<Trampoline>();
         _magas = new List<Magnit>();
         _shelves = new List<Shelf>();
         //_ball = new Ball(30, ballStartPos);
-        if (level > 2)
-        {
-            level = 1;
-        }
-        if (level == 2)
-        {
-            _ball = new Ball(30, new Vec2(370, 240));
-        }
-        if (level == 1)
-        {
-            _ball = new Ball(30, new Vec2(1600, 240));
-        }
+
+
         
 
+        
         _hud = new Constructor();
 
-        AddChild(_ball);
+        
         AddChild(_hud);
         _text = new EasyDraw(250, 25);
         _text.TextAlign(CenterMode.Min, CenterMode.Min);
@@ -92,7 +90,7 @@ public class Level : GameObject
         //_lineSegment = new NLineSegment(new Vec2(game.width - 60, game.height - 200), new Vec2(50, game.height - 20));
         //AddChild(_lineSegment);
 
-        SetupWalls();
+        LoadScene(1);
 
 
 
@@ -136,52 +134,6 @@ public class Level : GameObject
 
     }
 
-  
-
-   
-
-    void SetupWalls() {
-
-
-        if (level == 2) 
-        {
-
-            ballStartPos = new Vec2(370, 240);
-            AddLine(new Vec2(game.width - 50, game.height - 50), new Vec2(50, game.height - 50));
-            AddLine(new Vec2(50, game.height - 50), new Vec2(50, 50));
-            AddLine(new Vec2(50, 50), new Vec2(game.width - 50, 50));
-            AddLine(new Vec2(game.width - 50, 50), new Vec2(game.width - 50, game.height - 50));
-
-            AddLine(new Vec2(445, 437), new Vec2(295, 363));
-            AddLine(new Vec2(583, 583), new Vec2(429, 497));
-
-            levelC = new LevelChanger("bucket.png");
-            levelC.SetXY(1600, 920);
-            AddChild(levelC);
-        }
-        if (level == 1)
-        {
-
-            ballStartPos = new Vec2(1600, 240);
-            AddLine(new Vec2(game.width - 50, game.height - 50), new Vec2(50, game.height - 50));
-            AddLine(new Vec2(50, game.height - 50), new Vec2(50, 50));
-            AddLine(new Vec2(50, 50), new Vec2(game.width - 50, 50));
-            AddLine(new Vec2(game.width - 50, 50), new Vec2(game.width - 50, game.height - 50));
-
-            AddLine(new Vec2(1347, 636), new Vec2(1006, 705));
-
-            levelC = new LevelChanger("bucket.png");
-            levelC.SetXY(600, 920);
-            AddChild(levelC);
-        }
-        if (level > 2)
-        {
-            level = 1;
-        }
-        AddTrampoline(new Vec2(213131, 12312312), new Vec2(12313123, 123131),0);
-        AddMagnete(new Vec2(12312, 123132), new Vec2(123123, 123123), 0);
-        AddShelf(new Vec2(12312, 123132), new Vec2(123123, 123123), 0);
-    }
 
     void Update()
     {
@@ -231,7 +183,7 @@ public class Level : GameObject
         Vec2 ballNormal = _ball.position.Normal();
         Vec2 lineNormal = angledLine.Normal();
 
-        ballDistance = differenceVectorLines.Dot(lineNormal.Normalized());
+        ballDistance = differenceVectorLines.Dot(lineNormal.Normalized());   //HINT: it's NOT 10000
 
         if (Mathf.Abs(ballDistance) <= _ball.radius)
         {
@@ -252,12 +204,12 @@ public class Level : GameObject
 
         }
 
-
+        
         Vec2 differenceVectorShelves = _shelves[_shelvesIndex].start - _ball.position;
         Vec2 angledShelfe = _shelves[_shelvesIndex].end - _shelves[_shelvesIndex].start;
         Vec2 shelfNormal = angledLine.Normal();
 
-        ballDistance = differenceVectorShelves.Dot(shelfNormal.Normalized());
+        ballDistance = differenceVectorShelves.Dot(shelfNormal.Normalized());   //HINT: it's NOT 10000
 
         if (Mathf.Abs(ballDistance) <= _ball.radius)
         {
@@ -283,7 +235,7 @@ public class Level : GameObject
         Vec2 angledTramp = _tramps[_trapmsIndex].end - _tramps[_trapmsIndex].start;
         Vec2 trampNormal = angledTramp.Normal();
 
-        ballDistance = differenceVectorTramp.Dot(trampNormal.Normalized());
+        ballDistance = differenceVectorTramp.Dot(trampNormal.Normalized());   //HINT: it's NOT 10000
 
         if (Mathf.Abs(ballDistance) <= _ball.radius)
         {
@@ -315,7 +267,7 @@ public class Level : GameObject
         Vec2 angledMagnete = _magas[_magasIndex].end - _magas[_magasIndex].start;
         Vec2 magneteNormal = angledMagnete.Normal();
 
-        ballDistance = differenceVectorMagnete.Dot(magneteNormal.Normalized());
+        ballDistance = differenceVectorMagnete.Dot(magneteNormal.Normalized());   //HINT: it's NOT 10000
 
         if (Mathf.Abs(ballDistance) <= _ball.radius + 18)
         {
@@ -354,6 +306,7 @@ public class Level : GameObject
 
             
             magwf.SetOrigin(magwf.width/2, magwf.height/2);
+            
             magwf.SetXY(_hud.bakingPosition.x , _hud.bakingPosition.y);
             _hud.isConstWork = true;
             
@@ -501,18 +454,27 @@ public class Level : GameObject
         if (Input.GetKey(Key.R))
         {
 
-            Level reslevel = new Level(level);
-            game.AddChild(reslevel);
-            this.LateDestroy();
+            //Level reslevel = new Level(level);
+            //game.AddChild(reslevel);
+            //this.LateDestroy();
+            isGameStarted = false;
+            LoadScene(_startSceneNumber);
         }
 
         if (levelC.HitTestPoint(_ball.position.x, _ball.position.y)) 
         {
+            if (_startSceneNumber < 3)
+            {
+                _startSceneNumber++;
+                LoadScene(_startSceneNumber);
+            }
+            else
+            {
 
-            Level nextlevel = new Level(level + 1);
-            game.AddChild(nextlevel);
-            this.LateDestroy();
+                _startSceneNumber = 0;
 
+
+            }
         }
 
         _text.Clear(Color.Transparent);
@@ -520,4 +482,101 @@ public class Level : GameObject
         _text.Text("point X: " + (Input.mouseX), 0, 0);
         _text.Text("point Y: " + (Input.mouseY), 130, 0);
     }
+
+
+
+    void LoadScene(int sceneNumber)
+    {
+        _startSceneNumber = sceneNumber;
+        // remove previous scene:
+        foreach (NLineSegment lineAng in _lines)
+        {
+            lineAng.Destroy();
+        }
+        _lines.Clear();
+
+        foreach (Trampoline trampoline in _tramps)
+        {
+            trampoline.Destroy();
+        }
+        _tramps.Clear();
+
+        foreach (Magnit maga in _magas)
+        {
+            maga.Destroy();
+        }
+        _magas.Clear();
+
+        foreach (Shelf polka in _shelves)
+        {
+            polka.Destroy();
+        }
+        _shelves.Clear();
+        
+
+        // boundary:
+        AddLine(new Vec2(game.width - 50, game.height - 50), new Vec2(50, game.height - 50));
+        AddLine(new Vec2(50, game.height - 50), new Vec2(50, 50));
+        AddLine(new Vec2(50, 50), new Vec2(game.width - 50, 50));
+        AddLine(new Vec2(game.width - 50, 50), new Vec2(game.width - 50, game.height - 50));
+
+        AddTrampoline(new Vec2(213131, 12312312), new Vec2(12313123, 123131), 0);
+        AddMagnete(new Vec2(12312, 123132), new Vec2(123123, 123123), 0);
+        AddShelf(new Vec2(12312, 123132), new Vec2(123123, 123123), 0);
+        _ball.LateDestroy();
+        switch (sceneNumber)
+        {
+           
+            case 1: // level one
+                AddLine(new Vec2(1347, 636), new Vec2(1006, 705));
+                levelC.SetXY(600, 920);
+                ballStartPos = new Vec2(1600, 240);
+                _ball = new Ball(30, ballStartPos);
+                AddChild(_ball);
+                break;
+            case 2: // level two
+                AddLine(new Vec2(1347, 636), new Vec2(1006, 705));
+                levelC.SetXY(600, 920);
+                ballStartPos = new Vec2(370, 240);
+                _ball = new Ball(30, ballStartPos);
+                AddChild(_ball);
+                break;
+            default: // 
+                
+                break;
+        }
+      
+    }
+
+
+
+    //CollisionInfo FindEarliestCollision()
+    //{
+    //    MyGame myGame = (MyGame)game;
+    //    CollisionInfo firstColl = new CollisionInfo(new Vec2(), null, 2);
+    //    // line segmet			
+    //    for (int i = 0; i < _lines.Count; i++)
+    //    {
+    //        Ball mover = myGame.GetMover(i);
+    //        if (mover != this)
+    //        {
+    //            Vec2 relativePosition = position - mover.position;
+    //            if (relativePosition.Length() < radius + mover.radius)
+    //            {
+    //                // TODO: compute correct normal and time of impact, and 
+    //                // 		 return *earliest* collision instead of *first detected collision*:
+    //                Vec2 distanceBetweenMovers = mover.position - position;
+    //                Vec2 normalOfCollision = distanceBetweenMovers.Normal();
+    //                //_collisionIndicator = new Arrow(mover.position, position, 10);
+    //                //AddChild(_collisionIndicator);
+
+
+    //                return new CollisionInfo(new Vec2(1, 0), mover, 0);
+    //            }
+    //        }
+    //    }
+    //    // TODO: Check Line segments using myGame.GetLine();
+    //    return null;
+    //}
+
 }
