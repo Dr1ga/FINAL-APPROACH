@@ -269,32 +269,6 @@ public class Ball : EasyDraw
         return null;
     }
 
-    //CollisionInfo GetFirstMagnetColl()
-    //{
-
-    //    CollisionInfo firstColl = new CollisionInfo(new Vec2(), null, 2);
-    //    //line segment collision
-    //    for (int i = 0; i < _levelinfo._magas.Count; i++)
-    //    {
-    //        if (_levelinfo._magas[i] is Magnit)
-    //        {
-    //            Magnit magnit = _levelinfo._magas[i] as Magnit;
-    //            //calc vars
-    //            Vec2 normal = (magnit.end - magnit.start).Normal();
-    //            float ToI = GetLineToI(magnit, normal);
-    //            //test result
-    //            if (ToI <= 1 && ToI < firstColl.timeOfImpact)
-    //            {
-    //                Vec2 PoI = GetLinePoI(ToI);
-    //                if (IsValidPoI(PoI, magnit))
-    //                    firstColl = new CollisionInfo(normal, magnit, ToI);
-    //            }
-    //        }
-    //    }
-    //    if (firstColl.timeOfImpact != 2)
-    //        return firstColl;
-    //    return null;
-    //}
 
     float GetLineToI(LineSegment line, Vec2 normal)
     {
@@ -323,3 +297,4 @@ public class Ball : EasyDraw
         return false;
     }
 }
+//Powered by Arvid van den Hoogen 
