@@ -22,7 +22,7 @@ public class Level : GameObject
     public Sprite trampwf;
     public Sprite shlfwf;
     public Sprite fon;
-    
+    public Sprite fonblack;
     //public List<NLineSegment> _colliders;
     public List<NLineSegment> _lines;
     public List<Trampoline> _tramps;
@@ -65,7 +65,7 @@ public class Level : GameObject
     public TextBoard boardWothScore;
 
     LevelChanger levelC;
-
+    private int oldscore;
     public AnimationSprite crane;
     public Level(int numberOfLevel, float pSoundVolume) : base()
     {
@@ -78,6 +78,7 @@ public class Level : GameObject
         scoreBoard = new Sprite("HUD/score_board.png");
 
         fon = new Sprite("Level background hazy.png");
+        fonblack = new Sprite("blackpng.png");
         AddChild(fon);
         level = numberOfLevel;
         thatlevel = this;
@@ -88,7 +89,7 @@ public class Level : GameObject
 
         _ball = new Ball(30, ballStartPos, thatlevel);
 
-        crane = new AnimationSprite("spritesheet.png", 3, 2);
+        crane = new AnimationSprite("spritesheet.png", 6, 1);
 
         magwf.SetXY(-500, -500);
         trampwf.SetXY(-500, -500);
@@ -126,13 +127,15 @@ public class Level : GameObject
         AddChild(scoreBoard);
         AddChild(boardWothScore);
         AddChild(menuButton);
-        AddChild(_cursorIMG);
+        
         AddChild(levelC);
         AddChild(crane);
         AddChild(_hud);
+        //AddChild(fonblack);
         _clickSound = new Sound("1.mp3");
         crane.SetFrame(0);
-        
+        AddChild(_cursorIMG);
+        //fonblack.alpha = 0.1f;
     }
 
 
@@ -438,22 +441,43 @@ public class Level : GameObject
 
         if (levelC.HitTestPoint(_ball.position.x, _ball.position.y)) 
         {
+            
+            
+            //isLevelPassed = true;
             if (_startSceneNumber <= 4)
             {
                 _startSceneNumber++;
-                
+                oldscore = score;
+
                 LoadScene(_startSceneNumber);
+                Transit transit = new Transit(oldscore);
+                AddChild(transit);
             }
+
+
             else
             {
 
-                
-                _startSceneNumber = 0;
 
+                _startSceneNumber = 1;
+                LoadScene(_startSceneNumber);
 
             }
-            
+
+
         }
+
+
+
+       
+
+                
+
+            
+
+
+            
+
 
         if (Input.mouseX >= 0 & Input.mouseX <= game.width & Input.mouseY >= 0 & Input.mouseY <= game.height)
         {
@@ -467,7 +491,7 @@ public class Level : GameObject
     void LoadScene(int sceneNumber)
     {
         
-            _startSceneNumber = sceneNumber;
+        _startSceneNumber = sceneNumber;
         isGameStarted = false;
         // remove previous scene:
         foreach (NLineSegment lineAng in _lines)
@@ -509,8 +533,9 @@ public class Level : GameObject
         levelC.LateDestroy();
         _ball.LateDestroy();
         _hud.LateDestroy();
-        _cursorIMG.LateDestroy();
         crane.LateDestroy();
+        _cursorIMG.LateDestroy();
+        //fonblack.LateDestroy();
         //scoreBoard.LateDestroy();
         //boardWothScore.LateDestroy();
         //menuButton.LateDestroy();
@@ -602,7 +627,7 @@ public class Level : GameObject
                 levelC.SetXY(1750, 820);
                 ballStartPos = new Vec2(290, 240);
                 //crane = new AnimationSprite("spritesheet.png", 3, 2);
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(185, 30);
                 _ball = new Ball(30, ballStartPos, thatlevel);
@@ -641,7 +666,7 @@ public class Level : GameObject
                 AddLine(new Vec2(800, game.height / 2 - 100), new Vec2(800, game.height / 2 + 34));
                 AddLine(new Vec2(1179, game.height / 2 + 34), new Vec2(1179, game.height / 2 - 100));
 
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(785, 30);
                 _hud = new Constructor();
@@ -684,7 +709,7 @@ public class Level : GameObject
                 AddLine(new Vec2(1735, 690), new Vec2(1735, 950 + 134));
                 AddLine(new Vec2(1735 + 129, 950 + 134), new Vec2(1735 + 129, 690));
 
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(565, 30);
                 _hud = new Constructor();
@@ -737,7 +762,7 @@ public class Level : GameObject
                 AddLine(new Vec2(1235, 690), new Vec2(1235, 950 + 134));
                 AddLine(new Vec2(1235 + 129, 950 + 134), new Vec2(1235 + 129, 690));
 
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(1395, 60);
 
@@ -777,7 +802,7 @@ public class Level : GameObject
         {
 
             case 1: // level one
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(185, 30);
                 ballStartPos = new Vec2(290, 240);
@@ -788,7 +813,7 @@ public class Level : GameObject
                 AddChild(crane);
                 break;
             case 2: // level two
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(785, 30);
                 ballStartPos = new Vec2(890, 240);
@@ -799,7 +824,7 @@ public class Level : GameObject
                 AddChild(crane);
                 break;
             case 3: // level tree
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(565, 30);
                 ballStartPos = new Vec2(670, 240);
@@ -810,7 +835,7 @@ public class Level : GameObject
                 AddChild(crane);
                 break;
             case 4: // level 4
-                crane = new AnimationSprite("spritesheet.png", 3, 2);
+                crane = new AnimationSprite("spritesheet.png", 6, 1);
                 crane.SetFrame(0);
                 crane.SetXY(1395, 60);
                 ballStartPos = new Vec2(1500, 270);

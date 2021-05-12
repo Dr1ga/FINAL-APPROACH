@@ -24,14 +24,14 @@ public class TextBoard : GameObject
 
     /// <summary>Set the text. Int numbers mean color in RGB format
     /// </summary>
-    public void SetText(string text, float fontsize)
+    public void SetText(string text, float fontsize, int a = 0, int b = 0, int c = 0)
     {
 
         _easyDraw.Clear(Color.Transparent);
         
         _easyDraw.TextSize(fontsize);
         _easyDraw.Text(text, _easyDraw.width / 2, _easyDraw.height / 2);
-        _easyDraw.Fill(0, 0, 0);
+        _easyDraw.Fill(a, b, c);
 
     }
 

@@ -26,6 +26,10 @@ public class Menu : GameObject
     private Sprite _minusButton;
     private Sprite _minusButtonActive;
 
+    private Sprite _aKakButton;
+    private Sprite _obratnoButton;
+    private Sprite _obratnoButtonActive;
+
     private Sprite _fon;
 
     private int _numberOfLevel;
@@ -35,8 +39,15 @@ public class Menu : GameObject
 
     public float soundVolume;
     private TextBoard _sVolume;
+    private TextBoard _tutor;
+
+    private Sprite BATOOT;
+
     public Menu(int numberOfLevel , float pSoundVolume) : base()
     {
+
+        BATOOT = new Sprite("BATOOT.png");
+
         soundVolume = pSoundVolume;
         _cursorIMG = new Sprite("HUD/cursor_PNG50.png");
 
@@ -98,11 +109,35 @@ public class Menu : GameObject
         _goBackButtonActive.SetOrigin(_goBackButtonActive.width / 2f, _goBackButtonActive.height / 2f);
         _goBackButtonActive.SetXY(game.width / 2f + 10000, game.height / 2f + 300);
 
+        _aKakButton = new Sprite("question_mark_PNG52.png");
+        _aKakButton.SetOrigin(_aKakButton.width / 2f, _aKakButton.height / 2f);
+        _aKakButton.SetXY(1830, 60);
+
+        _obratnoButton = new Sprite("HUD/main_menu/options/go_back.png");
+        _obratnoButton.SetOrigin(_obratnoButton.width / 2f, _obratnoButton.height / 2f);
+        _obratnoButton.SetXY(game.width / 2f + 10000, game.height / 2f + 300);
+
+        _obratnoButtonActive = new Sprite("HUD/main_menu/options/go_back_active.png");
+        _obratnoButtonActive.SetOrigin(_obratnoButtonActive.width / 2f, _obratnoButtonActive.height / 2f);
+        _obratnoButtonActive.SetXY(game.width / 2f + 10000, game.height / 2f + 300);
+
+        _tutor = new TextBoard(600, 400);
+        _tutor.x += -10000;
+        _tutor.y += game.height / 2f - 250;
+
+        
+
         _sVolume = new TextBoard(220, 200);
         _sVolume.x += -10000;
         _sVolume.y += game.height / 2f - 150;
 
+        BATOOT.SetOrigin(BATOOT.width / 2, BATOOT.height / 2);
+        BATOOT.SetXY(game.width/2, 90);
         AddChild(_fon);
+        AddChild(_aKakButton);
+        AddChild(_obratnoButton);
+        AddChild(BATOOT);
+        AddChild(_tutor);
         AddChild(_sVolume);
         AddChild(_startButton);
         AddChild(_startButtonActive);
@@ -111,12 +146,12 @@ public class Menu : GameObject
         AddChild(_exitButton);
         AddChild(_exitButtonActive);
         AddChild(_goBackButton);
-        AddChild(_goBackButtonActive);
         AddChild(_minusButton);
         AddChild(_minusButtonActive);
         AddChild(_plusButton);
         AddChild(_plusButtonActive);
-        //_clickSound = new Sound(_clickSoundFilename);
+        AddChild(_goBackButtonActive);
+        AddChild(_obratnoButtonActive);
         AddChild(_cursorIMG);
     }
 
@@ -180,6 +215,19 @@ public class Menu : GameObject
             _goBackButtonActive.SetXY(game.width / 2f + 10000, game.height / 2f + 300);
         }
 
+        if (_obratnoButton.HitTestPoint(Input.mouseX, Input.mouseY))
+        {
+
+            _obratnoButtonActive.SetXY(game.width / 2f, game.height / 2f + 300);
+
+
+
+        }
+        else
+        {
+            _obratnoButtonActive.SetXY(game.width / 2f + 10000, game.height / 2f + 300);
+        }
+
         if (_minusButton.HitTestPoint(Input.mouseX, Input.mouseY))
         {
 
@@ -219,7 +267,7 @@ public class Menu : GameObject
             }
             if (_optionsButton.HitTestPoint(Input.mouseX, Input.mouseY))
             {
-
+                _aKakButton.x += 10000;
                 _startButton.x += 10000;
                 _exitButton.x += 10000;
                 _optionsButton.x += 10000;
@@ -242,6 +290,7 @@ public class Menu : GameObject
                 _plusButton.x += 10000;
                 _startButton.x -= 10000;
                 _exitButton.x -= 10000;
+                _aKakButton.x -= 10000;
                 _optionsButton.x -= 10000;
                 _sVolume.x = 10000;
                 _clickSound.Play();
@@ -261,11 +310,32 @@ public class Menu : GameObject
 
                 _clickSound.Play();
             }
+            if (_aKakButton.HitTestPoint(Input.mouseX, Input.mouseY) & soundVolume <= 0.99)
+            {
+                _startButton.x += 10000;
+                _exitButton.x += 10000;
+                _optionsButton.x += 10000;
+                _aKakButton.x += 10000;
+                _obratnoButton.x -= 10000;
+                _tutor.x = game.width / 2f - 300;
+                _clickSound.Play();
+            }
+            if (_obratnoButton.HitTestPoint(Input.mouseX, Input.mouseY) & soundVolume <= 0.99)
+            {
+                _obratnoButton.x += 10000;
+                _startButton.x -= 10000;
+                _exitButton.x -= 10000;
+                _optionsButton.x -= 10000;
+                _aKakButton.x -= 10000;
+                _tutor.x = 10000;
+                _clickSound.Play();
+            }
 
         }
 
 
         _sVolume.SetText(""+ Math.Round(soundVolume * 100), 100);
+        _tutor.SetText(" F - Reset Ball \n R - Reset Level \n LMB - open constructor \n RMB - close constructor \n C - decline ghost ctructure \n WASD - move point \n RIGHT/LEFT arrows - rotation \n SPACEBAR - place construction \n ENTER - start", 30);
         if (Input.mouseX >= 0 & Input.mouseX <= game.width & Input.mouseY >= 0 & Input.mouseY <= game.height)
         {
             _cursorIMG.SetXY(Input.mouseX, Input.mouseY);

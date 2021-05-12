@@ -146,20 +146,20 @@ public class Ball : EasyDraw
             position = POI;
             if (info.normal.x > 0)
             {
-                velocity.x += 0.2f;
+                velocity.x += 0.6f;
             }
             if (info.normal.x < 0)
             {
-                velocity.x -= 0.2f;
+                velocity.x -= 0.6f;
             }
             if (info.normal.x == 0 & velocity.x > 0)
             {
-                velocity.x -= 0.2f;
+                velocity.x -= 0.6f;
             }
             else
             if (info.normal.x == 0 & velocity.x < 0)
             {
-                velocity.x += 0.2f;
+                velocity.x += 0.6f;
             }
             velocity.Reflect(info.normal, 0.6f);     
         }
